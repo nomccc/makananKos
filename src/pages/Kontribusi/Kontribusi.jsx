@@ -1,13 +1,12 @@
 import React, { useRef, useState } from "react";
 import emailjs from "@emailjs/browser";
 import Input from "../../components/Input/Input";
-import Button from "../../components/Button/Button";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 
 const Kontribusi = () => {
-  const form = useRef();
+  const [loading, setLoading] = useState(false);
 
   const notifySuccess = () =>
     toast.success("Buat resep berhasil!", {
@@ -21,13 +20,7 @@ const Kontribusi = () => {
       theme: "light",
     });
 
-    
-
   const sendEmail = (e) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-
-
     e.preventDefault();
     if (
       isi.nama === "" ||
@@ -41,6 +34,7 @@ const Kontribusi = () => {
     ) {
       e.preventDefault();
     } else {
+      setLoading(true);
       emailjs
         .sendForm(
           `${import.meta.env.VITE_SERVICE_ID_EMAILJS}`,
@@ -51,12 +45,14 @@ const Kontribusi = () => {
         .then(
           (result) => {
             console.log(result.text);
-            // console.log("berhasil");
+            console.log("berhasil");
+            setLoading(false);
             notifySuccess();
           },
           (error) => {
             console.log(error.text);
-            // console.log("gagal");
+            console.log("gagal");
+            setLoading(false);
           }
         );
     }
@@ -75,6 +71,8 @@ const Kontribusi = () => {
     gambar: "",
     resep: "",
   });
+
+  const form = useRef();
 
   return (
     <div className="m-10">
@@ -132,7 +130,7 @@ const Kontribusi = () => {
               Masukkan resep kamu
             </label>
             <textarea
-            className="border-2"
+              className="border-2 p-4"
               name="message"
               id="message"
               cols="30"
@@ -178,7 +176,8 @@ const Kontribusi = () => {
             onChange={(e) => {
               console.log(e.target.value);
               const file = e.target.files[0];
-              if (file.size > 50) {
+              console.log(file.size);
+              if (file.size > 50000) {
                 setError((old) => {
                   return {
                     ...old,
@@ -214,9 +213,17 @@ const Kontribusi = () => {
             }}
           />
           <h1 className="text-red-600 mb-10">{error.gambar}</h1>
-          <button className="text-center p-3 rounded-lg mx-auto bg-orange-500 text-white">
-            Submit
-          </button>
+          {!loading ? (
+            <button
+              type="submit"
+              value="Send"
+              className="text-center p-3 rounded-lg mx-auto bg-orange-500 text-white"
+            >
+              Submit
+            </button>
+          ) : (
+            <span className="loading loading-dots loading-lg text-center mx-auto"></span>
+          )}
         </div>
       </form>
     </div>

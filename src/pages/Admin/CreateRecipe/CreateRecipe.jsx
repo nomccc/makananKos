@@ -11,7 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "../../../supabase/client";
 import { v4 as uuidv4 } from "uuid";
 import { useAuth } from "../../../context/AuthProvider";
-import { ref, uploadBytes } from "firebase/storage";
+import { listAll, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../../firebase/config";
 
 const CreateRecipe = () => {
@@ -56,11 +56,11 @@ const CreateRecipe = () => {
     intruksiResep: "",
   });
 
-  function checkLength(propertyName, value, propertyString) {
+  function checkLength(propertyName, value, propertyString, panjang) {
     if (value.length >= 25) {
       setError((prevError) => ({
         ...prevError,
-        [propertyName]: `${propertyString} tidak boleh lebih dari 30 karakter`,
+        [propertyName]: `${propertyString} tidak boleh lebih dari ${panjang} karakter`,
       }));
     } else {
       setError((prevError) => ({
@@ -73,62 +73,15 @@ const CreateRecipe = () => {
   const [media, setMedia] = useState([]);
   const [userId, setUserId] = useState("");
 
-  // const getUser = async () => {
-  //   try {
-  //     const {
-  //       data: { user },
-  //     } = await supabase.auth.getUser();
-  //     if (user !== null) {
-  //       setUserId(user.id)
-  //     } else {
-  //       setUserId('')
-  //     }
-  //   } catch (e) {}
+  // const uploadImage = () => {
+  //   if (recipe.gambarResep == null) return;
+  //   console.log(recipe.gambarResep);
+  //   const imageRef = ref(
+  //     storage,
+  //     `images/${recipe.gambarResep.name + uuidv4()}`
+  //   );
+  //   uploadBytes(imageRef, recipe.gambarResep).then(() => alert("berhasil"));
   // };
-
-  // async function uploadImage(e) {
-  //   let file = e.target.files[0];
-
-  //   const { data, error } = await supabase.storage
-  //     .from("images")
-  //     .upload(userId + "/" + uuidv4(), file);
-
-  //   if (data) {
-  //     console.log(data);
-  //     getMedia();
-  //   } else {
-  //     console.log(error);
-  //   }
-  // }
-
-  // async function getMedia() {
-  //   const { data, error } = await supabase.storage
-  //     .from("images")
-  //     .list(userId + "/", {
-  //       limit: 10,
-  //       offset: 0,
-  //       sortBy: {
-  //         column: "name",
-  //         order: "asc",
-  //       },
-  //     });
-
-  //   if (data) {
-  //     setMedia(data);
-  //   } else {
-  //     console.log(error);
-  //   }
-  // }
-
-  const uploadImage = () => {
-    if (recipe.gambarResep == null) return;
-    console.log(recipe.gambarResep);
-    const imageRef = ref(
-      storage,
-      `images/${recipe.gambarResep.name + uuidv4()}`
-    );
-    uploadBytes(imageRef, recipe.gambarResep).then(() => alert("berhasil"));
-  };
 
   function checkSubmit(event) {
     // menghitung id berdasarkan id sebelumnya
@@ -158,6 +111,9 @@ const CreateRecipe = () => {
     navigate("/readRecipe");
     notifySuccess();
   }
+
+
+  
 
   return (
     <Sidebar>
@@ -191,7 +147,7 @@ const CreateRecipe = () => {
               type="text"
               id="namaResep"
               text="Nama Resep"
-              maxLength={30}
+              maxLength={50}
               classname={classInput}
               value={recipe.namaResep}
               onChange={(e) => {
@@ -201,7 +157,7 @@ const CreateRecipe = () => {
                     namaResep: e.target.value,
                   };
                 });
-                checkLength("namaResep", e.target.value, "Nama resep");
+                checkLength("namaResep", e.target.value, "Nama resep", "50");
               }}
             />
             <p className="text-red-500 pb-2">{error.namaResep}</p>
@@ -219,7 +175,7 @@ const CreateRecipe = () => {
                     pembuatResep: e.target.value,
                   };
                 });
-                checkLength("Pembuat resep", e.target.value, "Nama resep");
+                checkLength("Pembuat resep", e.target.value, "Nama resep", "30");
               }}
             />
             <p className="text-red-500 pb-2">{error.pembuatResep}</p>
@@ -310,10 +266,10 @@ const CreateRecipe = () => {
                       });
                       const imageRef = ref(
                         storage,
-                        `images/${file.name + uuidv4()}`
+                        `images/${file.name + "-" + uuidv4()}`
                       );
                       uploadBytes(imageRef, file).then(() =>
-                        alert("berhasil")
+                        console.log("berhasil")
                       );
                     } else {
                       setError({

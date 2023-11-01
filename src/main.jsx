@@ -8,7 +8,7 @@ import { SessionContextProvider } from "@supabase/auth-helpers-react";
 import { supabase } from "./supabase/client.js";
 
 ReactDOM.createRoot(document.getElementById("root")).render(
-  <React.StrictMode>
+  // <React.StrictMode>
     <BrowserRouter>
       <AuthProvider>
         <SessionContextProvider supabaseClient={supabase}>
@@ -16,5 +16,5 @@ ReactDOM.createRoot(document.getElementById("root")).render(
         </SessionContextProvider>
       </AuthProvider>
     </BrowserRouter>
-  </React.StrictMode>
+  // </React.StrictMode>
 );

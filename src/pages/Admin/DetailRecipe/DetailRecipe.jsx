@@ -4,6 +4,8 @@ import parse from "html-react-parser";
 import { IoArrowBackOutline } from "react-icons/io5";
 import { deleteRecipe, getRecipe } from "../../../api/api";
 import { toast } from "react-toastify";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { storage } from "../../../firebase/config";
 
 const DetailRecipe = () => {
   const [loading, setLoading] = useState(false);
@@ -56,6 +58,18 @@ const DetailRecipe = () => {
       .catch((error) => console.log("error => ", error));
   }, []);
 
+  const [imageList, setImageList] = useState([]);
+  const imageListRef = ref(storage, "images/");
+
+  useEffect(() => {
+    listAll(imageListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setImageList((prev) => [...prev, url])
+        })
+      })
+    })
+  }, []);
   
   const token = sessionStorage.getItem('token')
 
@@ -133,7 +147,7 @@ const DetailRecipe = () => {
                 </p>
                 <img
                   className="w-full h-96 object-cover rounded-xl"
-                  src="https://www.indonesia.travel/content/dam/indtravelrevamp/en/trip-ideas/the-ultimate-guide-to-must-try-indonesian-food/1.jpg"
+                  src={imageList[id]}
                   alt=""
                 />
               </article>

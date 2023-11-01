@@ -4,10 +4,26 @@ import Sidebar from "../../../components/Sidebar/Sidebar";
 import { getRecipe } from "../../../api/api";
 import Button from "../../../components/Button/Button";
 import { Link } from "react-router-dom";
+import { getDownloadURL, listAll, ref } from "firebase/storage";
+import { storage } from "../../../firebase/config";
 
 const ReadRecipe = () => {
   const [loading, setLoading] = useState(false);
   const [recipe, setRecipe] = useState([]);
+
+  const imageListRef = ref(storage, "images/");
+  const [imageList, setImageList] = useState([]);
+
+  useEffect(() => {
+    listAll(imageListRef).then((response) => {
+      response.items.forEach((item) => {
+        getDownloadURL(item).then((url) => {
+          setImageList((prev) => [...prev, url])
+        })
+      })
+    })
+  }, []);
+
 
   useEffect(() => {
     setLoading(true);
@@ -32,7 +48,7 @@ const ReadRecipe = () => {
             recipe.length > 0 ? (
               recipe.map((item, index) => (
                 <div key={index}>
-                  <Card recipeName={item.namaResep} imgUrl={item.gambarResep} />
+                  <Card recipeName={item.namaResep} imgUrl={imageList[index]} />
                   <div className="flex justify-between gap-x-4">
                     <Link to={`/readRecipe/${item.id}`}>
                       <button className="bg-orange-500 px-2 py-2 rounded-md w-full text-sm text-white hover:bg-orange-400">
@@ -58,7 +74,7 @@ const ReadRecipe = () => {
           recipe.length > 0 ? (
             recipe.map((item, index) => (
               <div key={index}>
-                <Card recipeName={item.namaResep} imgUrl={item.gambarResep} />
+                <Card recipeName={item.namaResep} imgUrl={imageList[index]} />
                 <div className="flex justify-between gap-x-4">
                   <Link to={`/readRecipe/${item.id}`}>
                     <button className="bg-orange-500 px-2 py-2 rounded-md w-full text-sm text-white hover:bg-orange-400">
