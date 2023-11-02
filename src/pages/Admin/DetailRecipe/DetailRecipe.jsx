@@ -61,6 +61,8 @@ const DetailRecipe = () => {
   const [imageList, setImageList] = useState([]);
   const imageListRef = ref(storage, "images/");
 
+  console.log(imageList)
+
   useEffect(() => {
     listAll(imageListRef).then((response) => {
       response.items.forEach((item) => {
@@ -147,7 +149,7 @@ const DetailRecipe = () => {
                 </p>
                 <img
                   className="w-full h-96 object-cover rounded-xl"
-                  src={imageList[id]}
+                  src={imageList[id-1]}
                   alt=""
                 />
               </article>

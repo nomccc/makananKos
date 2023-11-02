@@ -208,7 +208,7 @@ const handleSubmit = (e) => {
                     }}
                   />
                 </div>
-                <div>
+                {/* <div>
                   <Input
                     name="gambarResep"
                     text="Gambar Resep"
@@ -236,7 +236,7 @@ const handleSubmit = (e) => {
                     }}
                   />
                   <p className="text-red-500 pb-2">{error.gambarResep}</p>
-                </div>
+                </div> */}
               </div>
 
               <div id="bahanResep" className="my-5 ">
