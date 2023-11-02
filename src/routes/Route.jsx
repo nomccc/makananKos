@@ -11,12 +11,14 @@ import Login from "../pages/Login/Login";
 import ErrorPage from "../pages/ErrorPage/ErrorPage";
 import Kontribusi from "../pages/Kontribusi/Kontribusi";
 import AuthRoute from "./AuthRoute";
+import OpenAi from "../pages/OpenAi/OpenAi";
 
 const Routing = () => {
   return (
     <Routes>
       <Route path="/" element={<LandingPage />} />
       <Route path="/login" element={<Login />} />
+      <Route path="openAi" element={<OpenAi/>} />
       <Route path="/kontribusi" element={<Kontribusi />} />
       <Route path="/readRecipe/:id" element={<DetailRecipe />} />
       <Route path="/readRecipe" element={<ReadRecipe />} />

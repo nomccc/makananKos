@@ -19,6 +19,7 @@ const Header = () => {
           <Link to="/">Beranda</Link>
           <Link to="/readRecipe">Resep</Link>
           <Link to="/kontribusi">Ayo Kontribusi!</Link>
+          <Link to="/openAi">OpenAI</Link>
         </ul>
       </div>
       <div className="basis-1/4 px-4 flex justify-end items-center">
