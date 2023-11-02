@@ -9,7 +9,7 @@ const Kontribusi = () => {
   const [loading, setLoading] = useState(false);
 
   const notifySuccess = () =>
-    toast.success("Buat resep berhasil!", {
+    toast.success("Berhasil Mengirim!", {
       position: "top-center",
       autoClose: 3000,
       hideProgressBar: false,
@@ -19,6 +19,19 @@ const Kontribusi = () => {
       progress: undefined,
       theme: "light",
     });
+
+    const notifyFailed = () => {
+      toast.error("Gagal Mengirim! Pastikan ukuran gambar dibawah 50kb", {
+        position: "top-center",
+        autoClose: 3000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      });
+    };
 
   const sendEmail = (e) => {
     e.preventDefault();
@@ -45,14 +58,13 @@ const Kontribusi = () => {
         .then(
           (result) => {
             console.log(result.text);
-            console.log("berhasil");
             setLoading(false);
             notifySuccess();
           },
           (error) => {
             console.log(error.text);
-            console.log("gagal");
             setLoading(false);
+            notifyFailed();
           }
         );
     }
@@ -136,7 +148,6 @@ const Kontribusi = () => {
               cols="30"
               rows="5"
               onChange={(value) => {
-                console.log(value);
                 setIsi((prev) => {
                   return {
                     ...prev,
@@ -145,22 +156,6 @@ const Kontribusi = () => {
                 });
               }}
             ></textarea>
-            {/* <ReactQuill
-              className="my-2"
-              id="message"
-              theme="snow"
-              name="message"
-              value={isi.resep}
-              onChange={(value) => {
-                console.log(value)
-                setIsi((prev) => {
-                  return {
-                    ...prev,
-                    resep: value,
-                  };
-                });
-              }}
-            /> */}
             <p className="text-gray-400">
               <span className="text-red-400">* </span>Resep terdiri dari nama
               resep, deskripsi singkat terkait resep, waktu pembuatan, porsi
@@ -174,9 +169,7 @@ const Kontribusi = () => {
             classname="mb-8"
             type="file"
             onChange={(e) => {
-              console.log(e.target.value);
               const file = e.target.files[0];
-              console.log(file.size);
               if (file.size > 50000) {
                 setError((old) => {
                   return {
@@ -198,7 +191,6 @@ const Kontribusi = () => {
                 (file.type === "image/jpeg" || file.type === "image/png")
               ) {
                 setIsi((old) => {
-                  console.log(file);
                   return {
                     ...old,
                     gambar: URL.createObjectURL(e.target.files[0]),

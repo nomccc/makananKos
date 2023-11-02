@@ -30,11 +30,10 @@ const DetailRecipe = () => {
   const id = pull.id;
 
   const fetchData = (id) => {
-    return recipe.filter(recipe => recipe.id == id)
+      return recipe.filter(recipe => recipe.id == id)
   }
 
   // inisialisasi location buat tarik data dari state
-  const location = useLocation();
 
   const parseData = (dataParam) => {
     const data = dataParam;
@@ -60,8 +59,6 @@ const DetailRecipe = () => {
 
   const [imageList, setImageList] = useState([]);
   const imageListRef = ref(storage, "images/");
-
-  console.log(imageList)
 
   useEffect(() => {
     listAll(imageListRef).then((response) => {
